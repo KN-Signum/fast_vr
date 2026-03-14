@@ -5,104 +5,94 @@ public class VRPaintBrush : MonoBehaviour
     [Header("Ustawienia Pędzla")]
     public Transform brushTip;
     public float brushReach = 0.2f;
-    public int brushSize = 5; // Grubość pędzla w pikselach
+    public int brushSize = 5;
     public Color paintColor = Color.red;
 
-    [Header("Ustawienia Płótna (Rozdzielczość)")]
+    [Header("Ustawienia Płótna")]
+    public Renderer targetCanvas; // <--- NOWE: Tutaj przypiszemy nasze płótno!
+    public Texture2D startingImage;
     public int textureWidth = 1024;
     public int textureHeight = 1024;
 
     private Texture2D canvasTexture;
-    private Renderer canvasRenderer;
     private bool isDrawing = false;
     private Vector2 lastDrawPos;
 
+    void Start()
+    {
+        // Inicjalizujemy płótno OD RAZU po starcie gry, zanim gracz w ogóle ruszy ręką
+        if (targetCanvas != null)
+        {
+            SetupCanvas(targetCanvas);
+        }
+        else
+        {
+            Debug.LogWarning("Hej! Zapomniałeś przypisać Target Canvas w skrypcie pędzla!");
+        }
+    }
+
     void Update()
     {
-        // Puszczamy laser z pędzla
         if (Physics.Raycast(brushTip.position, brushTip.forward, out RaycastHit hit, brushReach))
         {
-            if (hit.collider.CompareTag("Canvas"))
+            // Sprawdzamy, czy uderzyliśmy w płótno ORAZ czy to jest to konkretne płótno
+            if (hit.collider.CompareTag("Canvas") && hit.collider.GetComponent<Renderer>() == targetCanvas)
             {
-                // 1. INICJALIZACJA TEKSTURY (tylko za pierwszym uderzeniem w dane płótno)
-                if (canvasTexture == null || canvasRenderer != hit.collider.GetComponent<Renderer>())
-                {
-                    SetupCanvas(hit.collider.GetComponent<Renderer>());
-                }
-
-                // 2. PROJEKCJA 3D na 2D (To odpowiada Twojemu mapowaniu w Godocie!)
-                // hit.textureCoord zwraca nam pozycję uderzenia od 0.0 do 1.0 (X i Y)
                 Vector2 uvPos = hit.textureCoord;
-                
-                // 3. KONWERSJA NA PIKSELE
                 int pixelX = (int)(uvPos.x * textureWidth);
                 int pixelY = (int)(uvPos.y * textureHeight);
                 Vector2 currentPos = new Vector2(pixelX, pixelY);
 
-                // 4. RYSOWANIE LINII (lub pojedynczego punktu, jeśli to początek)
                 if (!isDrawing)
                 {
-                    DrawPoint(pixelX, pixelY); // Zaczynamy nowe pociągnięcie (is_new_stroke z Godota)
+                    DrawPoint(pixelX, pixelY);
                     isDrawing = true;
                 }
                 else
                 {
-                    DrawLine(lastDrawPos, currentPos); // Łączymy stary punkt z nowym
+                    DrawLine(lastDrawPos, currentPos);
                 }
 
                 lastDrawPos = currentPos;
-                
-                // 5. AKTUALIZACJA TEKSTURY (To odpowiada queue_redraw() w Godocie)
                 canvasTexture.Apply(); 
             }
-            else
-            {
-                isDrawing = false; // Pędzel dotyka czegoś innego
-            }
+            else isDrawing = false;
         }
-        else
-        {
-            isDrawing = false; // Pędzel wisi w powietrzu
-        }
+        else isDrawing = false;
     }
 
-    // --- FUNKCJE POMOCNICZE ---
-
-    // Tworzy czystą teksturę na płótnie
     void SetupCanvas(Renderer rend)
     {
-        canvasRenderer = rend;
-        // Tworzymy nową, czystą teksturę 2D
-        canvasTexture = new Texture2D(textureWidth, textureHeight);
-        
-        // Wypełniamy ją na biało (lub przezroczysto)
-        Color[] whitePixels = new Color[textureWidth * textureHeight];
-        for (int i = 0; i < whitePixels.Length; i++) whitePixels[i] = Color.white;
-        canvasTexture.SetPixels(whitePixels);
-        canvasTexture.Apply();
+        if (startingImage != null)
+        {
+            textureWidth = startingImage.width;
+            textureHeight = startingImage.height;
+            canvasTexture = new Texture2D(textureWidth, textureHeight, TextureFormat.RGBA32, false);
+            canvasTexture.SetPixels(startingImage.GetPixels());
+        }
+        else 
+        {
+            canvasTexture = new Texture2D(textureWidth, textureHeight);
+            Color[] whitePixels = new Color[textureWidth * textureHeight];
+            for (int i = 0; i < whitePixels.Length; i++) whitePixels[i] = Color.white;
+            canvasTexture.SetPixels(whitePixels);
+        }
 
-        // Podmieniamy główną teksturę materiału płótna na naszą nową
-        canvasRenderer.material.mainTexture = canvasTexture;
+        canvasTexture.Apply();
+        rend.material.mainTexture = canvasTexture;
     }
 
-    // Rysuje linię między dwoma pikselami (Algorytm Bresenhama)
     void DrawLine(Vector2 start, Vector2 end)
     {
-        int x0 = (int)start.x;
-        int y0 = (int)start.y;
-        int x1 = (int)end.x;
-        int y1 = (int)end.y;
-
-        int dx = Mathf.Abs(x1 - x0);
-        int dy = Mathf.Abs(y1 - y0);
-        int sx = x0 < x1 ? 1 : -1;
-        int sy = y0 < y1 ? 1 : -1;
+        int x0 = (int)start.x; int y0 = (int)start.y;
+        int x1 = (int)end.x; int y1 = (int)end.y;
+        int dx = Mathf.Abs(x1 - x0); int dy = Mathf.Abs(y1 - y0);
+        int sx = x0 < x1 ? 1 : -1; int sy = y0 < y1 ? 1 : -1;
         int err = dx - dy;
 
         while (true)
         {
             DrawPoint(x0, y0);
-
             if (x0 == x1 && y0 == y1) break;
             int e2 = 2 * err;
             if (e2 > -dy) { err -= dy; x0 += sx; }
@@ -110,14 +100,12 @@ public class VRPaintBrush : MonoBehaviour
         }
     }
 
-    // Maluje "kwadratowy" ślad pędzla wokół danego piksela
     void DrawPoint(int x, int y)
     {
         for (int i = -brushSize; i <= brushSize; i++)
         {
             for (int j = -brushSize; j <= brushSize; j++)
             {
-                // Zabezpieczenie przed wyjściem poza teksturę
                 if (x + i >= 0 && x + i < textureWidth && y + j >= 0 && y + j < textureHeight)
                 {
                     canvasTexture.SetPixel(x + i, y + j, paintColor);
