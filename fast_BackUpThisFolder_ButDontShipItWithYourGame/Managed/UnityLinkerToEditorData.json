@@ -10,14 +10,18 @@
         "dependencies": [
           {
             "name": "Animation",
-            "scenes": [],
+            "scenes": [
+              "Assets/_Project/Scenes/SampleScene.unity"
+            ],
             "dependencyType": 0,
             "icon": null
           },
           {
             "name": "AnimationClip",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity",
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
@@ -25,7 +29,9 @@
           {
             "name": "Animator",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity",
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
@@ -33,7 +39,9 @@
           {
             "name": "AnimatorController",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity",
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 1,
             "icon": null
@@ -45,9 +53,35 @@
             "icon": null
           },
           {
+            "name": "Behaviour",
+            "scenes": [
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity",
+              "Assets/_Project/Scenes/SampleScene.unity"
+            ],
+            "dependencyType": 0,
+            "icon": null
+          },
+          {
+            "name": "IConstraint",
+            "scenes": [],
+            "dependencyType": 1,
+            "icon": null
+          },
+          {
             "name": "Motion",
             "scenes": [],
             "dependencyType": 1,
+            "icon": null
+          },
+          {
+            "name": "RotationConstraint",
+            "scenes": [
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity",
+              "Assets/_Project/Scenes/SampleScene.unity"
+            ],
+            "dependencyType": 0,
             "icon": null
           },
           {
@@ -75,7 +109,9 @@
           {
             "name": "AudioBehaviour",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity",
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
@@ -83,7 +119,7 @@
           {
             "name": "AudioClip",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
@@ -91,7 +127,9 @@
           {
             "name": "AudioListener",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity",
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
@@ -105,7 +143,7 @@
           {
             "name": "AudioResource",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
@@ -113,7 +151,7 @@
           {
             "name": "AudioSource",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
@@ -150,7 +188,9 @@
           {
             "name": "Camera",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity",
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
@@ -170,7 +210,9 @@
           {
             "name": "Cubemap",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity",
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
@@ -190,7 +232,9 @@
           {
             "name": "EditorExtension",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity",
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 1,
             "icon": null
@@ -204,7 +248,9 @@
           {
             "name": "GameObject",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity",
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
@@ -236,7 +282,9 @@
           {
             "name": "LevelGameManager",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity",
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 1,
             "icon": null
@@ -244,7 +292,17 @@
           {
             "name": "Light",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity",
+              "Assets/_Project/Scenes/SampleScene.unity"
+            ],
+            "dependencyType": 0,
+            "icon": null
+          },
+          {
+            "name": "LightProbeGroup",
+            "scenes": [
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
@@ -257,20 +315,26 @@
           },
           {
             "name": "LightProbes",
-            "scenes": [],
+            "scenes": [
+              "Assets/_Project/Scenes/SampleScene.unity"
+            ],
             "dependencyType": 0,
             "icon": null
           },
           {
             "name": "LightingSettings",
-            "scenes": [],
+            "scenes": [
+              "Assets/_Project/Scenes/SampleScene.unity"
+            ],
             "dependencyType": 0,
             "icon": null
           },
           {
             "name": "LightmapSettings",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity",
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
@@ -278,7 +342,9 @@
           {
             "name": "LineRenderer",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity",
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
@@ -292,7 +358,9 @@
           {
             "name": "Material",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity",
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
@@ -300,7 +368,9 @@
           {
             "name": "Mesh",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity",
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
@@ -308,7 +378,9 @@
           {
             "name": "MeshFilter",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity",
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
@@ -316,7 +388,9 @@
           {
             "name": "MeshRenderer",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity",
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
@@ -324,7 +398,9 @@
           {
             "name": "MonoBehaviour",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity",
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
@@ -338,7 +414,9 @@
           {
             "name": "MonoScript",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity",
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 1,
             "icon": null
@@ -346,7 +424,9 @@
           {
             "name": "NamedObject",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity",
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 1,
             "icon": null
@@ -384,21 +464,27 @@
           {
             "name": "RectTransform",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity",
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
           },
           {
             "name": "ReflectionProbe",
-            "scenes": [],
+            "scenes": [
+              "Assets/_Project/Scenes/SampleScene.unity"
+            ],
             "dependencyType": 0,
             "icon": null
           },
           {
             "name": "RenderSettings",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity",
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
@@ -430,7 +516,9 @@
           {
             "name": "Shader",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity",
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
@@ -444,7 +532,9 @@
           {
             "name": "SkinnedMeshRenderer",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity",
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
@@ -458,7 +548,9 @@
           {
             "name": "SortingGroup",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity",
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
@@ -466,7 +558,9 @@
           {
             "name": "Sprite",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity",
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
@@ -988,7 +1082,7 @@
           {
             "name": "ParticleSystem",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
@@ -996,7 +1090,7 @@
           {
             "name": "ParticleSystemRenderer",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
@@ -1009,7 +1103,7 @@
           {
             "name": "BoxCollider",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
@@ -1017,7 +1111,7 @@
           {
             "name": "CapsuleCollider",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
@@ -1025,7 +1119,9 @@
           {
             "name": "CharacterController",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity",
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
@@ -1039,7 +1135,9 @@
           {
             "name": "MeshCollider",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity",
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
@@ -1051,9 +1149,17 @@
             "icon": null
           },
           {
+            "name": "PhysicsMaterial",
+            "scenes": [
+              "Assets/_Project/Scenes/SampleScene.unity"
+            ],
+            "dependencyType": 0,
+            "icon": null
+          },
+          {
             "name": "Rigidbody",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
@@ -1061,7 +1167,7 @@
           {
             "name": "SphereCollider",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
@@ -1484,7 +1590,9 @@
           {
             "name": "Font",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity",
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
@@ -1527,21 +1635,29 @@
           {
             "name": "Canvas",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity",
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
           },
           {
             "name": "CanvasGroup",
-            "scenes": [],
+            "scenes": [
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity",
+              "Assets/_Project/Scenes/SampleScene.unity"
+            ],
             "dependencyType": 0,
             "icon": null
           },
           {
             "name": "CanvasRenderer",
             "scenes": [
-              "Assets/Samples/XR Interaction Toolkit/3.3.0/Starter Assets/DemoScene.unity"
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity",
+              "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
             "icon": null
@@ -1729,8 +1845,18 @@
         "name": "Video",
         "dependencies": [
           {
+            "name": "VideoClip",
+            "scenes": [
+              "Assets/_Project/Scenes/SampleScene.unity"
+            ],
+            "dependencyType": 0,
+            "icon": null
+          },
+          {
             "name": "VideoPlayer",
-            "scenes": [],
+            "scenes": [
+              "Assets/_Project/Scenes/SampleScene.unity"
+            ],
             "dependencyType": 0,
             "icon": null
           }

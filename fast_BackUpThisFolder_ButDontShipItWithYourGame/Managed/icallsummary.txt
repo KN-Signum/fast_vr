@@ -335,6 +335,8 @@ UnityEngine.Application::set_targetFrameRate
 UnityEngine.Application::get_platform
 UnityEngine.Application::GetStackTraceLogType
 UnityEngine.AssetBundle::LoadAsset_Internal_Injected
+UnityEngine.AsyncOperation::InternalDestroy
+UnityEngine.AsyncOperation::InternalSetManagedObject
 UnityEngine.Audio.ScriptableProcessorBindings::CheckProcessorExistsInternal_Injected
 UnityEngine.AudioSettings::StartAudioOutput
 UnityEngine.AudioSettings::StopAudioOutput
@@ -1135,7 +1137,6 @@ UnityEngine.ParticleSystem::Emit_Injected
 UnityEngine.ParticleSystem::Emit_Internal_Injected
 UnityEngine.ParticleSystem::Play_Injected
 UnityEngine.ParticleSystem::SetParticles_Injected
-UnityEngine.ParticleSystem::Stop_Injected
 UnityEngine.ParticleSystem/MainModule::get_startColorBlittable_Injected
 UnityEngine.ParticleSystem/MainModule::get_startSizeBlittable_Injected
 UnityEngine.ParticleSystemRenderer::GetMeshes_Injected
@@ -1630,6 +1631,7 @@ UnityEngine.SceneManagement.Scene::GetRootGameObjectsInternal_Injected
 UnityEngine.SceneManagement.SceneManager::get_sceneCount
 UnityEngine.SceneManagement.SceneManager::GetActiveScene_Injected
 UnityEngine.SceneManagement.SceneManager::GetSceneAt_Injected
+UnityEngine.SceneManagement.SceneManagerAPIInternal::LoadSceneAsyncNameIndexInternal_Injected
 UnityEngine.Screen::get_fullScreen
 UnityEngine.Screen::GetMSAASamples
 UnityEngine.Screen::get_height
