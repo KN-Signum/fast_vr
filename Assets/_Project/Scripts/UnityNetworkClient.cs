@@ -28,7 +28,7 @@ public class UnityNetworkClient : MonoBehaviour
     }
 
     [Header("Network Settings")]
-    public string serverUrl = "ws://127.0.0.1:8000/ws";
+    public string serverUrl = "ws://192.168.100.6:8080/ws";
     private WebSocket _websocket;
 
     [Header("Capture Settings")]
@@ -54,14 +54,19 @@ public class UnityNetworkClient : MonoBehaviour
             HandleIncomingCommand(msg);
         };
 
-        await _websocket.Connect();
+        try {
+            await _websocket.Connect();
+        } catch (Exception e) {
+            Debug.LogError($"💥 Wyjątek przy łączeniu: {e.Message}");
+        }
     }
 
     void Update()
     {
-        #if !UNITY_WEBGL || UNITY_EDITOR
+        if (_websocket != null)
+        {
             _websocket.DispatchMessageQueue();
-        #endif
+        }
 
         if (_websocket.State == WebSocketState.Open && !_isBusy && Time.time >= _nextFrameTime)
         {
@@ -106,6 +111,22 @@ public class UnityNetworkClient : MonoBehaviour
 
         switch (cmd.action)
         {
+                // MENU
+            case "next_to_selection":
+                // Znajdujemy menu i przełączamy panel
+                FindFirstObjectByType<VRMainMenu>()?.ShowMenu();
+                break;
+            case "start_forest":
+                SceneManager.LoadScene("ForestScene"); 
+                break;
+            case "start_painting":
+                SceneManager.LoadScene("PaintingGame");
+                break;
+            case "exit_app":
+                Application.Quit();
+                break;
+
+                // MALOWANIE
             case "clear_palette":
                 // Naprawione: Usunięto niejednoznaczne "Object."
                 FindFirstObjectByType<VRPaintBrush>()?.ClearCanvas();

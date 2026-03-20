@@ -491,7 +491,10 @@
           },
           {
             "name": "RenderTexture",
-            "scenes": [],
+            "scenes": [
+              "Assets/_Project/Scenes/MainMenu.unity",
+              "Assets/_Project/Scenes/PaintingGame.unity"
+            ],
             "dependencyType": 0,
             "icon": null
           },

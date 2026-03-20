@@ -6,28 +6,49 @@ public class VRMainMenu : MonoBehaviour
     [Header("Panele UI")]
     public GameObject infoPanel;
     public GameObject menuPanel;
-
-    private UnityNetworkClient _networkClient;
+    
+    private SceneStateSync _stateSync;
 
     void Start()
     {
-        _networkClient = Object.FindFirstObjectByType<UnityNetworkClient>();
-        ShowInfo(); // Zawsze zaczynamy od info
+        _stateSync = GetComponent<SceneStateSync>();
+
+        if (_stateSync == null)
+    {
+        _stateSync = Object.FindFirstObjectByType<SceneStateSync>();
     }
 
-    // Wywoływane przez przycisk "Dalej" w VR lub Dashboardzie
+        if (_stateSync != null)
+    {
+        ShowInfo();
+    }
+        else
+    {
+        Debug.LogError("❌ KRYTYCZNY BŁĄD: Nie znaleziono skryptu SceneStateSync na scenie! " +
+                       "Upewnij się, że obiekt _SceneController go posiada.");
+    }
+    }
+
     public void ShowMenu()
     {
         infoPanel.SetActive(false);
         menuPanel.SetActive(true);
-        SendStateToDashboard("menu");
+
+        _stateSync.SendState("menu", new ActionEntry[] {
+            new ActionEntry { action = "start_forest", label = "Spacer w lesie" },
+            new ActionEntry { action = "start_painting", label = "Malowanie" },
+            new ActionEntry { action = "exit_app", label = "Wyjdź" }
+        });
     }
 
     public void ShowInfo()
     {
         infoPanel.SetActive(true);
         menuPanel.SetActive(false);
-        SendStateToDashboard("info");
+
+        _stateSync.SendState("info", new ActionEntry[] {
+            new ActionEntry { action = "next_to_selection", label = "Zacznij badanie" }
+        });
     }
 
     public void LoadGameScene(string sceneName)
@@ -39,24 +60,5 @@ public class VRMainMenu : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
-    }
-
-    private void SendStateToDashboard(string view)
-    {
-        if (_networkClient == null) return;
-
-        string actionsJson = "";
-        if (view == "info") {
-            actionsJson = "[{\"action\": \"next_to_selection\", \"label\": \"Dalej\"}]";
-        } else {
-            actionsJson = "[" +
-                "{\"action\": \"start_forest\", \"label\": \"Spacer w lesie\"}," +
-                "{\"action\": \"start_painting\", \"label\": \"Malowanie\"}," +
-                "{\"action\": \"exit_app\", \"label\": \"Zamknij aplikację\"}" +
-                "]";
-        }
-
-        string msg = "{\"type\": \"state_update\", \"current_view\": \"" + view + "\", \"available_actions\": " + actionsJson + "}";
-        _networkClient.SendTextMessage(msg);
     }
 }

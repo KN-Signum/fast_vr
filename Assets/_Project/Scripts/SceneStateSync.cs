@@ -37,6 +37,19 @@ public class SceneStateSync : MonoBehaviour
         }
     }
 
+    public void SendState(string name, ActionEntry[] availableActions)
+    {
+        if (_networkClient == null) return;
+
+        StateUpdateMessage msg = new StateUpdateMessage {
+            current_view = name,
+            available_actions = availableActions
+        };
+
+        string json = JsonUtility.ToJson(msg);
+        _networkClient.SendTextMessage(json);
+    }
+
     public void SendStateToDashboard()
     {
         StateUpdateMessage msg = new StateUpdateMessage {

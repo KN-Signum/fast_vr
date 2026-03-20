@@ -3644,7 +3644,6 @@ GameObject:
   - component: {fileID: 572537493}
   - component: {fileID: 572537492}
   - component: {fileID: 572537491}
-  - component: {fileID: 572537490}
   m_Layer: 0
   m_Name: SpectatorCamera
   m_TagString: Untagged
@@ -3667,25 +3666,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1100164416}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &572537490
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 572537488}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e721c1a3f007e4887bb479a4ec6a95a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ImageStreamer
-  dashboardRT: {fileID: 8400000, guid: e548f19d7f05f434ba8a9fae46996d8a, type: 2}
-  server: {fileID: 0}
-  targetFPS: 20
-  jpgQuality: 70
-  _tex: {fileID: 0}
-  _isBusy: 0
-  _nextFrameTime: 0
 --- !u!114 &572537491
 MonoBehaviour:
   m_ObjectHideFlags: 0
