@@ -9,8 +9,10 @@ public class VRPaintBrush : MonoBehaviour
     public Color paintColor = Color.red;
 
     [Header("Ustawienia Płótna")]
-    public Renderer targetCanvas; // <--- NOWE: Tutaj przypiszemy nasze płótno!
-    public Texture2D startingImage;
+    public Renderer targetCanvas; 
+    public Texture2D[] referenceImages;
+    private int _currentImageIndex = 0;
+
     public int textureWidth = 1024;
     public int textureHeight = 1024;
 
@@ -23,12 +25,52 @@ public class VRPaintBrush : MonoBehaviour
         // Inicjalizujemy płótno OD RAZU po starcie gry, zanim gracz w ogóle ruszy ręką
         if (targetCanvas != null)
         {
-            SetupCanvas(targetCanvas);
+            Texture2D startImg = (referenceImages != null && referenceImages.Length > 0) 
+                ? referenceImages[0] 
+                : null;
+            
+            SetupCanvas(targetCanvas, startImg);
         }
         else
         {
             Debug.LogWarning("Hej! Zapomniałeś przypisać Target Canvas w skrypcie pędzla!");
         }
+    }
+
+    public void ClearCanvas()
+    {
+        Debug.Log("🎨 Dashboard: Czyszczenie palety.");
+        // Czyścimy do aktualnego wzoru lub na biało
+        Texture2D currentRef = (referenceImages != null && referenceImages.Length > _currentImageIndex) 
+            ? referenceImages[_currentImageIndex] 
+            : null;
+            
+        ResetToImage(currentRef);
+    }
+
+    public void LoadNextReference()
+    {
+        if (referenceImages == null || referenceImages.Length == 0) return;
+
+        _currentImageIndex = (_currentImageIndex + 1) % referenceImages.Length;
+        Debug.Log($"🎨 Dashboard: Zmiana wzoru na indeks {_currentImageIndex}.");
+        
+        ResetToImage(referenceImages[_currentImageIndex]);
+    }
+
+    private void ResetToImage(Texture2D img)
+    {
+        if (img != null)
+        {
+            canvasTexture.SetPixels(img.GetPixels());
+        }
+        else 
+        {
+            Color[] whitePixels = new Color[textureWidth * textureHeight];
+            for (int i = 0; i < whitePixels.Length; i++) whitePixels[i] = Color.white;
+            canvasTexture.SetPixels(whitePixels);
+        }
+        canvasTexture.Apply();
     }
 
     void Update()
@@ -61,24 +103,16 @@ public class VRPaintBrush : MonoBehaviour
         else isDrawing = false;
     }
 
-    void SetupCanvas(Renderer rend)
+    private void SetupCanvas(Renderer rend, Texture2D img)
     {
-        if (startingImage != null)
+        if (img != null)
         {
-            textureWidth = startingImage.width;
-            textureHeight = startingImage.height;
-            canvasTexture = new Texture2D(textureWidth, textureHeight, TextureFormat.RGBA32, false);
-            canvasTexture.SetPixels(startingImage.GetPixels());
-        }
-        else 
-        {
-            canvasTexture = new Texture2D(textureWidth, textureHeight);
-            Color[] whitePixels = new Color[textureWidth * textureHeight];
-            for (int i = 0; i < whitePixels.Length; i++) whitePixels[i] = Color.white;
-            canvasTexture.SetPixels(whitePixels);
+            textureWidth = img.width;
+            textureHeight = img.height;
         }
 
-        canvasTexture.Apply();
+        canvasTexture = new Texture2D(textureWidth, textureHeight, TextureFormat.RGBA32, false);
+        ResetToImage(img);
         rend.material.mainTexture = canvasTexture;
     }
 

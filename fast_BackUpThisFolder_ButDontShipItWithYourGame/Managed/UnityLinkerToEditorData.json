@@ -1103,6 +1103,7 @@
           {
             "name": "BoxCollider",
             "scenes": [
+              "Assets/_Project/Scenes/PaintingGame.unity",
               "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,
@@ -1159,6 +1160,7 @@
           {
             "name": "Rigidbody",
             "scenes": [
+              "Assets/_Project/Scenes/PaintingGame.unity",
               "Assets/_Project/Scenes/SampleScene.unity"
             ],
             "dependencyType": 0,

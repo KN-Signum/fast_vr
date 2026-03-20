@@ -1208,6 +1208,7 @@ UnityEngine.Random::get_value
 UnityEngine.Random::InitState
 UnityEngine.Random::get_state_Injected
 UnityEngine.Random::set_state_Injected
+UnityEngine.RaycastHit::CalculateRaycastTexCoord_Injected
 UnityEngine.RectOffset::get_bottom_Injected
 UnityEngine.RectOffset::get_horizontal_Injected
 UnityEngine.RectOffset::get_left_Injected
@@ -1878,6 +1879,7 @@ UnityEngine.Texture2D::SetAllPixels32_Injected
 UnityEngine.Texture2D::SetPixelImpl_Injected
 UnityEngine.Texture2D::SetPixelsImpl_Injected
 UnityEngine.Texture2D::UpdateExternalTexture_Injected
+UnityEngine.Texture2D::GetPixels_Injected
 UnityEngine.Texture2D::get_format_Injected
 UnityEngine.Texture2DArray::Internal_CreateImpl_Injected
 UnityEngine.Texture2DArray::SetPixelDataImpl_Injected
