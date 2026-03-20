@@ -13,6 +13,20 @@ public class GameCommand
 
 public class UnityNetworkClient : MonoBehaviour
 {
+
+    private static UnityNetworkClient _instance;
+
+    void Awake()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject); // Usuwamy duplikat przy powrocie do Menu
+            return;
+        }
+        _instance = this;
+        DontDestroyOnLoad(this.gameObject); // To sprawia, że połączenie trwa!
+    }
+
     [Header("Network Settings")]
     public string serverUrl = "ws://127.0.0.1:8000/ws";
     private WebSocket _websocket;
@@ -55,23 +69,6 @@ public class UnityNetworkClient : MonoBehaviour
             _nextFrameTime = Time.time + (1f / targetFPS);
         }
     }
-
-    private static UnityNetworkClient _instance;
-
-    void Awake()
-    {
-        // Jeśli już istnieje instancja, zniszcz ten duplikat
-        if (_instance != null && _instance != this)
-        {
-            Destroy(this.gameObject);
-            return;
-        }
-
-        _instance = this;
-        // To sprawia, że obiekt przetrwa ładowanie nowych scen!
-        DontDestroyOnLoad(this.gameObject);
-    }
-
         public void SendTextMessage(string json)
     {
         if (_websocket != null && _websocket.State == WebSocketState.Open)
@@ -121,7 +118,7 @@ public class UnityNetworkClient : MonoBehaviour
                 FindFirstObjectByType<VRPaintBrush>()?.LoadNextReference();
                 break;
             case "back_to_menu":
-                SceneManager.LoadScene("MainSelection");
+                SceneManager.LoadScene("MainMenu");
                 break;
 
             case "request_state":
