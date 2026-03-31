@@ -51,13 +51,27 @@ public class SceneStateSync : MonoBehaviour
     }
 
     public void SendStateToDashboard()
+{
+    if (_networkClient == null) return;
+
+    // Check if this is MainMenu with dynamic state
+    VRMainMenu mainMenu = GetComponent<VRMainMenu>();
+    
+    if (mainMenu != null)
     {
+        // MainMenu has dynamic state (Info vs Menu), so use SendCurrentState
+        mainMenu.SendCurrentState();
+    }
+    else
+    {
+        // Other scenes use Inspector-configured state
         StateUpdateMessage msg = new StateUpdateMessage {
             current_view = sceneName,
             available_actions = actions
         };
 
         string json = JsonUtility.ToJson(msg);
-        _networkClient.SendTextMessage(json); // Musimy dodać tę metodę do UnityNetworkClient
+        _networkClient.SendTextMessage(json);
     }
+}
 }

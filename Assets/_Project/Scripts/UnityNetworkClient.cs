@@ -2,7 +2,11 @@ using UnityEngine;
 using NativeWebSocket;
 using System.Collections;
 using System;
-using UnityEngine.SceneManagement; // Potrzebne do restartu gry
+using UnityEngine.SceneManagement;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
 
 [Serializable]
 public class GameCommand
@@ -15,7 +19,6 @@ public class UnityNetworkClient : MonoBehaviour
 {
 
     private static UnityNetworkClient _instance;
-
     void Awake()
     {
         if (_instance != null && _instance != this)
@@ -27,9 +30,18 @@ public class UnityNetworkClient : MonoBehaviour
         DontDestroyOnLoad(this.gameObject); // To sprawia, że połączenie trwa!
     }
 
+    [Header("Beacon Settings")]
+    public int BeaconPort = 15000;
+    public string ExpectedService = "hrv-biofeedback";   // must match beacon_manager.py
+
     [Header("Network Settings")]
-    public string serverUrl = "ws://192.168.100.6:8080/ws";
     private WebSocket _websocket;
+
+    // Beacon discovery
+    private UdpClient _udpClient;
+    private Thread _listenThread;
+    private bool _listening;
+    private string _discoveredUrl;   // written on background thread, read on main thread
 
     [Header("Capture Settings")]
     public RenderTexture dashboardRT;
@@ -40,35 +52,31 @@ public class UnityNetworkClient : MonoBehaviour
     private bool _isBusy = false;
     private float _nextFrameTime = 0f;
 
-    async void Start()
+    void Start()
     {
         _tex = new Texture2D(dashboardRT.width, dashboardRT.height, TextureFormat.RGB24, false);
-        _websocket = new WebSocket(serverUrl);
-
-        _websocket.OnOpen += () => Debug.Log("✅ Połączono! Czekam na komendy z Dashboardu...");
-        _websocket.OnError += (e) => Debug.LogError($"❌ Błąd WS: {e}");
-        
-        _websocket.OnMessage += (bytes) =>
-        {
-            string msg = System.Text.Encoding.UTF8.GetString(bytes);
-            HandleIncomingCommand(msg);
-        };
-
-        try {
-            await _websocket.Connect();
-        } catch (Exception e) {
-            Debug.LogError($"💥 Wyjątek przy łączeniu: {e.Message}");
-        }
+        Debug.Log($"🔍 Listening for server beacon on UDP port {BeaconPort}...");
+        StartBeaconListener();
     }
 
     void Update()
     {
+
+    // Check if beacon thread discovered the server
+    if (_discoveredUrl != null && _websocket == null)
+    {
+        string url = _discoveredUrl;
+        _discoveredUrl = null;
+        StopBeaconListener();
+        ConnectWebSocket(url);
+    }
+
         if (_websocket != null)
         {
             _websocket.DispatchMessageQueue();
         }
 
-        if (_websocket.State == WebSocketState.Open && !_isBusy && Time.time >= _nextFrameTime)
+        if (_websocket != null && _websocket.State == WebSocketState.Open && !_isBusy && Time.time >= _nextFrameTime)
         {
             StartCoroutine(CaptureAndSend());
             _nextFrameTime = Time.time + (1f / targetFPS);
@@ -152,6 +160,79 @@ public class UnityNetworkClient : MonoBehaviour
     }
 }
 
+// ── Beacon Discovery ───────────────────────────────────────
+
+private void StartBeaconListener()
+{
+    Debug.Log("DEBUG: start beacon dupa");
+    _udpClient = new UdpClient(BeaconPort);
+    _udpClient.EnableBroadcast = true;
+    _listening = true;
+
+    _listenThread = new Thread(ListenLoop)
+    {
+        IsBackground = true,
+        Name = "BeaconListener"
+    };
+    _listenThread.Start();
+}
+
+private void ListenLoop()
+{
+    var endPoint = new IPEndPoint(IPAddress.Any, BeaconPort);
+
+    while (_listening)
+    {
+        try
+        {
+            byte[] data = _udpClient.Receive(ref endPoint);
+            string json = Encoding.UTF8.GetString(data);
+            var beacon = JsonUtility.FromJson<BeaconPayload>(json);
+
+            if (beacon != null && beacon.service == ExpectedService)
+            {
+                Debug.Log($"[Beacon] Server found at {beacon.ws_url}");
+                _discoveredUrl = beacon.ws_url;   // picked up by Update()
+                return;
+            }
+            Debug.Log("DEBUG: beacon not found");
+        }
+        catch (SocketException ex)
+        {
+            if (_listening)
+                Debug.LogWarning($"[Beacon] Socket error: {ex.Message}");
+        }
+    }
+}
+
+private void StopBeaconListener()
+{
+    _listening = false;
+    _udpClient?.Close();
+    _udpClient = null;
+}
+
+private async void ConnectWebSocket(string url)
+{
+    Debug.Log($"🔗 Connecting to {url}...");
+    _websocket = new WebSocket(url);
+
+    _websocket.OnOpen  += () => Debug.Log("✅ Połączono! Czekam na komendy z Dashboardu...");
+    _websocket.OnError += (e) => Debug.LogError($"❌ Błąd WS: {e}");
+    _websocket.OnMessage += (bytes) =>
+    {
+        string msg = System.Text.Encoding.UTF8.GetString(bytes);
+        HandleIncomingCommand(msg);
+    };
+
+    try {
+        await _websocket.Connect();
+    } catch (Exception e) {
+        Debug.LogError($"💥 Wyjątek przy łączeniu: {e.Message}");
+    }
+}
+
+
 IEnumerator CaptureAndSaveResult()
 {
     _isBusy = true;
@@ -167,7 +248,7 @@ IEnumerator CaptureAndSaveResult()
 
     // Wysyłamy JSON, który Twój Flutter już potrafi obsłużyć i pobrać!
     string jsonResponse = "{\"type\": \"canvas_image\", \"image_base64\": \"" + base64Image + "\", \"format\": \"jpg\"}";
-    _websocket.SendText(jsonResponse);
+    _ = _websocket.SendText(jsonResponse);
 
     Debug.Log("🖼️ Wysłano obraz malunku do Dashboardu!");
     _isBusy = false;
@@ -186,6 +267,20 @@ IEnumerator CaptureAndSaveResult()
 
     private async void OnApplicationQuit()
     {
+        StopBeaconListener();
         if (_websocket != null) await _websocket.Close();
     }
+
+    private void OnDestroy()
+    {
+        StopBeaconListener();
+    }
+
+    [Serializable]
+    private class BeaconPayload
+    {
+        public string service;
+        public string ws_url;
+    }
 }
+

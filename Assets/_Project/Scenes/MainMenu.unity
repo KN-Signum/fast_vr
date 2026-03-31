@@ -1771,7 +1771,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14e3b89416fd94b6db9a654897738751, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityNetworkClient
-  serverUrl: ws://127.0.0.1:8000/ws
+  BeaconPort: 15000
+  ExpectedService: hrv-biofeedback
   dashboardRT: {fileID: 8400000, guid: e548f19d7f05f434ba8a9fae46996d8a, type: 2}
   targetFPS: 20
   jpgQuality: 50

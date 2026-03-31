@@ -61,4 +61,16 @@ public class VRMainMenu : MonoBehaviour
     {
         Application.Quit();
     }
+
+    public void SendCurrentState()
+{
+    if (infoPanel.activeInHierarchy)
+    {
+        ShowInfo();
+    }
+    else
+    {
+        ShowMenu();
+    }
+}
 }
