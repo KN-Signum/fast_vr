@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - Canvas
+  - ColorWell
   layers:
   - Default
   - TransparentFX

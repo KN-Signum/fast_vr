@@ -22,7 +22,7 @@ public class VRPaintBrush : MonoBehaviour
 
     void Start()
     {
-        // Inicjalizujemy płótno OD RAZU po starcie gry, zanim gracz w ogóle ruszy ręką
+        // 1. Existing Canvas Setup
         if (targetCanvas != null)
         {
             Texture2D startImg = (referenceImages != null && referenceImages.Length > 0) 
@@ -31,9 +31,12 @@ public class VRPaintBrush : MonoBehaviour
             
             SetupCanvas(targetCanvas, startImg);
         }
-        else
+
+        // 2. NEW: Initialize Brush Tip Color
+        if (brushTipRenderer != null)
         {
-            Debug.LogWarning("Hej! Zapomniałeś przypisać Target Canvas w skrypcie pędzla!");
+            // This ensures the visual sphere matches your 'paintColor' variable immediately
+            brushTipRenderer.material.color = paintColor;
         }
     }
 
@@ -78,35 +81,75 @@ public class VRPaintBrush : MonoBehaviour
         canvasTexture.Apply();
     }
 
-    void Update()
+[Header("Ustawienia Wizualne")]
+public Renderer brushTipRenderer; // Drag the new Sphere here!
+
+void Update()
+{
+    if (Physics.Raycast(brushTip.position, brushTip.forward, out RaycastHit hit, brushReach))
     {
-        if (Physics.Raycast(brushTip.position, brushTip.forward, out RaycastHit hit, brushReach))
+        // 1. Check for Color Wells (Spheres on palette)
+        if (hit.collider.CompareTag("ColorWell"))
         {
-            // Sprawdzamy, czy uderzyliśmy w płótno ORAZ czy to jest to konkretne płótno
-            if (hit.collider.CompareTag("Canvas") && hit.collider.GetComponent<Renderer>() == targetCanvas)
+            ColorWell well = hit.collider.GetComponent<ColorWell>();
+            if (well != null)
             {
-                Vector2 uvPos = hit.textureCoord;
-                int pixelX = (int)(uvPos.x * textureWidth);
-                int pixelY = (int)(uvPos.y * textureHeight);
-                Vector2 currentPos = new Vector2(pixelX, pixelY);
-
-                if (!isDrawing)
+                paintColor = well.wellColor;
+                
+                // Update the visual tip color
+                if (brushTipRenderer != null)
                 {
-                    DrawPoint(pixelX, pixelY);
-                    isDrawing = true;
-                }
-                else
-                {
-                    DrawLine(lastDrawPos, currentPos);
+                    brushTipRenderer.material.color = paintColor;
                 }
 
-                lastDrawPos = currentPos;
-                canvasTexture.Apply(); 
+                isDrawing = false; 
+                return; 
             }
-            else isDrawing = false;
+        }
+
+        // 2. Check for Canvas/Palette Surface
+        if (hit.collider.CompareTag("Canvas") && hit.collider.GetComponent<Renderer>() == targetCanvas)
+        {
+            Vector2 uvPos = hit.textureCoord;
+            int pixelX = (int)(uvPos.x * textureWidth);
+            int pixelY = (int)(uvPos.y * textureHeight);
+            Vector2 currentPos = new Vector2(pixelX, pixelY);
+
+            if (!isDrawing)
+            {
+                DrawPoint(pixelX, pixelY);
+                isDrawing = true;
+            }
+            else
+            {
+                DrawLine(lastDrawPos, currentPos);
+            }
+
+            lastDrawPos = currentPos;
+            canvasTexture.Apply(); 
         }
         else isDrawing = false;
     }
+    else isDrawing = false;
+}
+
+    private void PickColor(Vector2 uv)
+{
+    if (referenceImages != null && referenceImages.Length > _currentImageIndex)
+    {
+        Texture2D currentRef = referenceImages[_currentImageIndex];
+        
+        // Sample color from the original high-quality texture
+        Color pickedColor = currentRef.GetPixelBilinear(uv.x, uv.y);
+        
+        // Ignore transparent areas (the wood of the palette) if you only want the paint circles
+        if (pickedColor.a > 0.1f) 
+        {
+            paintColor = pickedColor;
+            Debug.Log($"🎨 Color Picked: {pickedColor}");
+        }
+    }
+}
 
     private void SetupCanvas(Renderer rend, Texture2D img)
     {
