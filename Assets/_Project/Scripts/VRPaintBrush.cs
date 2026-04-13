@@ -37,6 +37,11 @@ public class VRPaintBrush : MonoBehaviour
         }
     }
 
+    public Texture2D GetActiveTexture()
+    {
+        return canvasTexture;
+    }
+
     public void ClearCanvas()
     {
         Debug.Log("🎨 Dashboard: Czyszczenie palety.");

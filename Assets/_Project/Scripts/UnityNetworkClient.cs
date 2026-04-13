@@ -232,25 +232,33 @@ private async void ConnectWebSocket(string url)
     }
 }
 
-
 IEnumerator CaptureAndSaveResult()
 {
     _isBusy = true;
     yield return new WaitForEndOfFrame();
 
-    // Używamy Twojego RT, na którym gracz maluje
-    RenderTexture.active = dashboardRT;
-    _tex.ReadPixels(new Rect(0, 0, dashboardRT.width, dashboardRT.height), 0, 0);
-    _tex.Apply();
+    // 1. Find the brush script to get the actual painted texture
+    var brush = FindFirstObjectByType<VRPaintBrush>();
+    
+    if (brush != null && brush.GetActiveTexture() != null)
+    {
+        Texture2D paintedTex = brush.GetActiveTexture();
+        
+        // 2. Encode the actual drawing texture directly to JPG
+        // This ignores the 3D world, lighting, and cameras
+        byte[] jpgData = paintedTex.EncodeToJPG(80);
+        string base64Image = System.Convert.ToBase64String(jpgData);
 
-    byte[] jpgData = _tex.EncodeToJPG(80);
-    string base64Image = System.Convert.ToBase64String(jpgData);
+        string jsonResponse = "{\"type\": \"canvas_image\", \"image_base64\": \"" + base64Image + "\", \"format\": \"jpg\"}";
+        _ = _websocket.SendText(jsonResponse);
 
-    // Wysyłamy JSON, który Twój Flutter już potrafi obsłużyć i pobrać!
-    string jsonResponse = "{\"type\": \"canvas_image\", \"image_base64\": \"" + base64Image + "\", \"format\": \"jpg\"}";
-    _ = _websocket.SendText(jsonResponse);
+        Debug.Log("🖼️ Wysłano czysty obraz płótna do Dashboardu!");
+    }
+    else
+    {
+        Debug.LogError("❌ Nie znaleziono tekstury malunku!");
+    }
 
-    Debug.Log("🖼️ Wysłano obraz malunku do Dashboardu!");
     _isBusy = false;
 }
 
