@@ -125,10 +125,10 @@ public class UnityNetworkClient : MonoBehaviour
                 FindFirstObjectByType<VRMainMenu>()?.ShowMenu();
                 break;
             case "start_forest":
-                SceneManager.LoadScene("ForestScene"); 
+                SceneManager.LoadScene(GameSceneNames.ForestWalk);
                 break;
             case "start_painting":
-                SceneManager.LoadScene("PaintingGame");
+                SceneManager.LoadScene(GameSceneNames.PaintingGame);
                 break;
             case "exit_app":
                 Application.Quit();
@@ -147,7 +147,18 @@ public class UnityNetworkClient : MonoBehaviour
                 FindFirstObjectByType<VRPaintBrush>()?.LoadNextReference();
                 break;
             case "back_to_menu":
-                SceneManager.LoadScene("MainMenu");
+                SceneManager.LoadScene(GameSceneNames.MainMenu);
+                break;
+
+                // FOREST WALK
+            case "start_walk":
+                FindFirstObjectByType<ForestWalkController>()?.StartWalk();
+                break;
+            case "pause_walk":
+                FindFirstObjectByType<ForestWalkController>()?.PauseWalk();
+                break;
+            case "resume_walk":
+                FindFirstObjectByType<ForestWalkController>()?.ResumeWalk();
                 break;
 
             case "request_state":

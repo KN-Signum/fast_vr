@@ -9,11 +9,14 @@ EditorBuildSettings:
     path: Assets/_Project/Scenes/MainMenu.unity
     guid: aa29e506e709b4d0eab20e87ab1346d4
   - enabled: 1
-    path: Assets/_Project/Scenes/SampleScene.unity
-    guid: 55daccc09a3b69647bbab145b54a3ab3
+    path: Assets/_Project/Scenes/ForestWalk.unity
+    guid: e10575e059e83934d9e1571d6b8a41ee
   - enabled: 1
     path: Assets/_Project/Scenes/PaintingGame.unity
     guid: 56e63dd4a47524894bbc468c7c7eedc2
+  - enabled: 1
+    path: Assets/_Project/Scenes/SampleScene.unity
+    guid: 55daccc09a3b69647bbab145b54a3ab3
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: bfa1182bd221b4ca89619141f66f1260, type: 2}
     Unity.XR.WindowsMR.Settings: {fileID: 11400000, guid: dc5a169419fa04987b057f65238cf3ba, type: 2}

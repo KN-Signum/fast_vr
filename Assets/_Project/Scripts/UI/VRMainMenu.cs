@@ -9,28 +9,27 @@ public class VRMainMenu : MonoBehaviour
     
     private SceneStateSync _stateSync;
 
-    void Start()
+    void Awake()
     {
         _stateSync = GetComponent<SceneStateSync>();
-
         if (_stateSync == null)
-    {
-        _stateSync = Object.FindFirstObjectByType<SceneStateSync>();
+            _stateSync = Object.FindFirstObjectByType<SceneStateSync>();
     }
 
+    void Start()
+    {
         if (_stateSync != null)
-    {
-        ShowInfo();
-    }
+            ShowInfo();
         else
-    {
-        Debug.LogError("❌ KRYTYCZNY BŁĄD: Nie znaleziono skryptu SceneStateSync na scenie! " +
-                       "Upewnij się, że obiekt _SceneController go posiada.");
-    }
+            Debug.LogError("❌ KRYTYCZNY BŁĄD: Nie znaleziono skryptu SceneStateSync na scenie! " +
+                           "Upewnij się, że obiekt _SceneController go posiada.");
     }
 
     public void ShowMenu()
     {
+        if (infoPanel == null || menuPanel == null || _stateSync == null)
+            return;
+
         infoPanel.SetActive(false);
         menuPanel.SetActive(true);
 
@@ -43,6 +42,9 @@ public class VRMainMenu : MonoBehaviour
 
     public void ShowInfo()
     {
+        if (infoPanel == null || menuPanel == null || _stateSync == null)
+            return;
+
         infoPanel.SetActive(true);
         menuPanel.SetActive(false);
 
@@ -55,6 +57,16 @@ public class VRMainMenu : MonoBehaviour
     {
         Debug.Log("Ładowanie sceny: " + sceneName);
         SceneManager.LoadScene(sceneName);
+    }
+
+    public void LoadForestWalk()
+    {
+        LoadGameScene(GameSceneNames.ForestWalk);
+    }
+
+    public void LoadPaintingGame()
+    {
+        LoadGameScene(GameSceneNames.PaintingGame);
     }
 
     public void QuitGame()
