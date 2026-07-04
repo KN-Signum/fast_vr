@@ -1,8 +1,7 @@
+using System;
+using System.Collections;
 using UnityEngine;
 using NativeWebSocket;
-using System.Collections;
-using System;
-using UnityEngine.SceneManagement;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -125,10 +124,10 @@ public class UnityNetworkClient : MonoBehaviour
                 FindFirstObjectByType<VRMainMenu>()?.ShowMenu();
                 break;
             case "start_forest":
-                SceneManager.LoadScene(GameSceneNames.ForestWalk);
+                SceneLoader.Load(GameSceneNames.ForestWalk);
                 break;
             case "start_painting":
-                SceneManager.LoadScene(GameSceneNames.PaintingGame);
+                SceneLoader.Load(GameSceneNames.PaintingGame);
                 break;
             case "exit_app":
                 Application.Quit();
@@ -147,7 +146,7 @@ public class UnityNetworkClient : MonoBehaviour
                 FindFirstObjectByType<VRPaintBrush>()?.LoadNextReference();
                 break;
             case "back_to_menu":
-                SceneManager.LoadScene(GameSceneNames.MainMenu);
+                SceneLoader.Load(GameSceneNames.MainMenu);
                 break;
 
                 // FOREST WALK
@@ -281,7 +280,7 @@ IEnumerator CaptureAndSaveResult()
 
     private void RestartGame() {
         Debug.Log("Restartuję scenę...");
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneLoader.LoadActiveScene();
     }
 
     private async void OnApplicationQuit()

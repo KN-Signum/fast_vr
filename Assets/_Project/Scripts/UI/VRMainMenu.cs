@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class VRMainMenu : MonoBehaviour
 {
@@ -56,7 +55,7 @@ public class VRMainMenu : MonoBehaviour
     public void LoadGameScene(string sceneName)
     {
         Debug.Log("Ładowanie sceny: " + sceneName);
-        SceneManager.LoadScene(sceneName);
+        SceneLoader.Load(sceneName);
     }
 
     public void LoadForestWalk()
