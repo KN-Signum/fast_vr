@@ -32,6 +32,8 @@ public class UnityNetworkClient : MonoBehaviour
     [Header("Beacon Settings")]
     public int BeaconPort = 15000;
     public string ExpectedService = "hrv-biofeedback";   // must match beacon_manager.py
+    [Tooltip("Optional: skip UDP discovery and connect directly, e.g. ws://192.168.1.10:8080/ws")]
+    public string manualServerUrl = "";
 
     [Header("Network Settings")]
     private WebSocket _websocket;
@@ -41,6 +43,9 @@ public class UnityNetworkClient : MonoBehaviour
     private Thread _listenThread;
     private bool _listening;
     private string _discoveredUrl;   // written on background thread, read on main thread
+    private string _pendingUrl;
+    private float _nextReconnectTime;
+    private const float ReconnectDelaySeconds = 3f;
 
     [Header("Capture Settings")]
     public RenderTexture dashboardRT;
@@ -54,19 +59,32 @@ public class UnityNetworkClient : MonoBehaviour
     void Start()
     {
         _tex = new Texture2D(dashboardRT.width, dashboardRT.height, TextureFormat.RGB24, false);
+
+        if (!string.IsNullOrWhiteSpace(manualServerUrl))
+        {
+            Debug.Log($"🔗 Using manual server URL: {manualServerUrl}");
+            QueueConnect(manualServerUrl.Trim());
+            return;
+        }
+
         Debug.Log($"🔍 Listening for server beacon on UDP port {BeaconPort}...");
         StartBeaconListener();
     }
 
     void Update()
     {
-
-    // Check if beacon thread discovered the server
-    if (_discoveredUrl != null && _websocket == null)
+    if (_discoveredUrl != null && _websocket == null && _pendingUrl == null)
     {
         string url = _discoveredUrl;
         _discoveredUrl = null;
         StopBeaconListener();
+        QueueConnect(url);
+    }
+
+    if (_pendingUrl != null && _websocket == null && Time.time >= _nextReconnectTime)
+    {
+        string url = _pendingUrl;
+        _pendingUrl = null;
         ConnectWebSocket(url);
     }
 
@@ -86,7 +104,8 @@ public class UnityNetworkClient : MonoBehaviour
         if (_websocket != null && _websocket.State == WebSocketState.Open)
         {
             _ = _websocket.SendText(json);
-            Debug.Log($"📤 Wysłano stan do Dashboardu: {json}");
+            if (!json.Contains("\"type\":\"eye_tracking\"") && !json.Contains("\"type\": \"eye_tracking\""))
+                Debug.Log($"📤 Wysłano stan do Dashboardu: {json}");
         }
     }
 
@@ -222,13 +241,34 @@ private void StopBeaconListener()
     _udpClient = null;
 }
 
+private void QueueConnect(string url)
+{
+    _pendingUrl = url;
+    _nextReconnectTime = Time.time;
+}
+
+private void ScheduleReconnect(string url, string reason)
+{
+    Debug.LogWarning($"🔁 Ponowienie połączenia za {ReconnectDelaySeconds:0}s ({reason})");
+    _websocket = null;
+    _pendingUrl = url;
+    _nextReconnectTime = Time.time + ReconnectDelaySeconds;
+
+    if (string.IsNullOrWhiteSpace(manualServerUrl))
+        StartBeaconListener();
+}
+
 private async void ConnectWebSocket(string url)
 {
     Debug.Log($"🔗 Connecting to {url}...");
     _websocket = new WebSocket(url);
 
-    _websocket.OnOpen  += () => Debug.Log("✅ Połączono! Czekam na komendy z Dashboardu...");
-    _websocket.OnError += (e) => Debug.LogError($"❌ Błąd WS: {e}");
+    _websocket.OnOpen  += () => Debug.Log($"✅ Połączono z {url}! Czekam na komendy z Dashboardu...");
+    _websocket.OnError += (e) =>
+    {
+        Debug.LogError($"❌ Błąd WS ({url}): {e}");
+        ScheduleReconnect(url, e);
+    };
     _websocket.OnMessage += (bytes) =>
     {
         string msg = System.Text.Encoding.UTF8.GetString(bytes);
@@ -238,7 +278,8 @@ private async void ConnectWebSocket(string url)
     try {
         await _websocket.Connect();
     } catch (Exception e) {
-        Debug.LogError($"💥 Wyjątek przy łączeniu: {e.Message}");
+        Debug.LogError($"💥 Wyjątek przy łączeniu ({url}): {e.Message}");
+        ScheduleReconnect(url, e.Message);
     }
 }
 

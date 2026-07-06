@@ -25,7 +25,7 @@ public class SceneStateSync : MonoBehaviour
     void Start()
     {
         // Szukamy głównego skryptu sieciowego na scenie
-        _networkClient = FindObjectOfType<UnityNetworkClient>();
+        _networkClient = FindFirstObjectByType<UnityNetworkClient>();
 
         if (_networkClient != null)
         {
