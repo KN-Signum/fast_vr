@@ -1,5 +1,7 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using Unity.XR.CoreUtils;
 using VIVE.OpenXR;
 using VIVE.OpenXR.EyeTracker;
 
@@ -27,11 +29,29 @@ public class EyeTrackingStreamer : MonoBehaviour
     private float _nextLogTime;
     private bool _loggedUnavailable;
     private bool _loggedFirstSample;
+    private bool _loggedMissingTrackingSpace;
+    private Transform _trackingSpace;
 
     void Awake()
     {
         if (networkClient == null)
             networkClient = GetComponent<UnityNetworkClient>();
+    }
+
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        ResolveTrackingSpace();
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        ResolveTrackingSpace();
     }
 
     void Update()
@@ -45,6 +65,7 @@ public class EyeTrackingStreamer : MonoBehaviour
             return;
 
         _loggedUnavailable = false;
+        ConvertTrackingPoseToWorld(ref gazeOrigin, ref gazeRotation);
 
         Transform player = ResolvePlayerTransform();
         Vector3 playerPosition = player != null ? player.position : gazeOrigin;
@@ -54,6 +75,41 @@ public class EyeTrackingStreamer : MonoBehaviour
         TryAttachSpectatorScreenCoords(message, gazePoint);
         networkClient.SendTextMessage(JsonUtility.ToJson(message));
         LogSample(playerPosition, gazePoint, gazeOrigin, gazeRotation);
+    }
+
+    private void ResolveTrackingSpace()
+    {
+        var xrOrigin = FindFirstObjectByType<XROrigin>();
+        if (xrOrigin != null)
+        {
+            var floorOffset = xrOrigin.CameraFloorOffsetObject;
+            _trackingSpace = floorOffset != null ? floorOffset.transform : xrOrigin.transform;
+            _loggedMissingTrackingSpace = false;
+            return;
+        }
+
+        var mainCamera = Camera.main;
+        _trackingSpace = mainCamera != null ? mainCamera.transform.parent : null;
+    }
+
+    private void ConvertTrackingPoseToWorld(ref Vector3 origin, ref Quaternion rotation)
+    {
+        if (_trackingSpace == null)
+            ResolveTrackingSpace();
+
+        if (_trackingSpace == null)
+        {
+            if (!_loggedMissingTrackingSpace)
+            {
+                _loggedMissingTrackingSpace = true;
+                Debug.LogWarning("[EyeTrackingStreamer] XR tracking space not found; gaze pose cannot be converted to world space.");
+            }
+
+            return;
+        }
+
+        origin = _trackingSpace.TransformPoint(origin);
+        rotation = _trackingSpace.rotation * rotation;
     }
 
     private Transform ResolvePlayerTransform()
@@ -127,11 +183,15 @@ public class EyeTrackingStreamer : MonoBehaviour
             return;
 
         Vector3 viewport = spectatorCamera.WorldToViewportPoint(worldPoint);
-        if (viewport.z <= 0f)
+        if (viewport.z <= 0f
+            || viewport.x < 0f
+            || viewport.x > 1f
+            || viewport.y < 0f
+            || viewport.y > 1f)
             return;
 
-        message.gaze_screen_x = Mathf.Clamp01(viewport.x);
-        message.gaze_screen_y = Mathf.Clamp01(viewport.y);
+        message.gaze_screen_x = viewport.x;
+        message.gaze_screen_y = viewport.y;
     }
 
     private static Camera FindSpectatorCamera()
