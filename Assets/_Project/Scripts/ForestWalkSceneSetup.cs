@@ -19,6 +19,8 @@ public class ForestWalkSceneSetup : MonoBehaviour
         EnsureSceneController();
         EnsureSpectatorCamera();
         EnsureForestWalkController();
+        EnsureHeadBob();
+        EnsureBirdRandomizer();
     }
 
     private void EnsureSceneController()
@@ -64,6 +66,31 @@ public class ForestWalkSceneSetup : MonoBehaviour
             walkRoot = new GameObject("ForestWalkLogic");
 
         walkRoot.AddComponent<ForestWalkController>();
+    }
+
+    private void EnsureHeadBob()
+    {
+        if (FindFirstObjectByType<ForestHeadBob>() != null)
+            return;
+
+        // Self-resolves the XR camera offset and SplineAnimate at runtime.
+        gameObject.AddComponent<ForestHeadBob>();
+    }
+
+    private void EnsureBirdRandomizer()
+    {
+        if (FindFirstObjectByType<ForestBirdRandomizer>() != null)
+            return;
+
+        var birds = GameObject.Find("Birds");
+        if (birds == null)
+        {
+            Debug.LogWarning("ForestWalk: no 'Birds' container found — skipping bird randomization.");
+            return;
+        }
+
+        // Operates on the container's direct children.
+        birds.AddComponent<ForestBirdRandomizer>();
     }
 
     private static Transform FindHeadTransform()

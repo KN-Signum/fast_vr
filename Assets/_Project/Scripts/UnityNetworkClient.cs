@@ -99,6 +99,8 @@ public class UnityNetworkClient : MonoBehaviour
             _nextFrameTime = Time.time + (1f / targetFPS);
         }
     }
+        public bool IsConnected => _websocket != null && _websocket.State == WebSocketState.Open;
+
         public void SendTextMessage(string json)
     {
         if (_websocket != null && _websocket.State == WebSocketState.Open)
@@ -182,6 +184,8 @@ public class UnityNetworkClient : MonoBehaviour
             case "request_state":
                 // Szukamy kontrolera sceny i prosimy go o ponowne wysłanie danych
                 FindFirstObjectByType<SceneStateSync>()?.SendStateToDashboard();
+                // Ponowne wysłanie liczby ptaków (bez losowania od nowa) — jeśli jesteśmy w lesie
+                FindFirstObjectByType<ForestBirdRandomizer>()?.SendCount();
                 break;
         }
     } catch (Exception e) {

@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.endel.nativewebsocket": "file:/Users/adamgruda/Downloads/NativeWebSocket-master/NativeWebSocket/Assets",
+    "com.endel.nativewebsocket": "https://github.com/endel/NativeWebSocket.git#upm-2",
     "com.htc.upm.vive.openxr": "https://github.com/ViveSoftware/VIVE-OpenXR.git?path=com.htc.upm.vive.openxr",
     "com.unity.cloud.gltfast": "6.18.0",
     "com.unity.feature.development": "1.0.2",

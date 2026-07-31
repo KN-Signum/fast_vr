@@ -1,10 +1,11 @@
 {
   "dependencies": {
     "com.endel.nativewebsocket": {
-      "version": "file:/Users/adamgruda/Downloads/NativeWebSocket-master/NativeWebSocket/Assets",
+      "version": "https://github.com/endel/NativeWebSocket.git#upm-2",
       "depth": 0,
-      "source": "local",
-      "dependencies": {}
+      "source": "git",
+      "dependencies": {},
+      "hash": "522f0c3f5c2ef7273737707effaa840c65e20e98"
     },
     "com.htc.upm.vive.openxr": {
       "version": "https://github.com/ViveSoftware/VIVE-OpenXR.git?path=com.htc.upm.vive.openxr",
