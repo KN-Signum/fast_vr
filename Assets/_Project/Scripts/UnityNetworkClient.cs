@@ -166,6 +166,18 @@ public class UnityNetworkClient : MonoBehaviour
                 // Naprawione: Usunięto niejednoznaczne "Object."
                 FindFirstObjectByType<VRPaintBrush>()?.LoadNextReference();
                 break;
+            case "move_easel_left":
+                MoveEasel(controller => controller.MoveLeft());
+                break;
+            case "move_easel_right":
+                MoveEasel(controller => controller.MoveRight());
+                break;
+            case "move_easel_up":
+                MoveEasel(controller => controller.MoveUp());
+                break;
+            case "move_easel_down":
+                MoveEasel(controller => controller.MoveDown());
+                break;
             case "back_to_menu":
                 SceneLoader.Load(GameSceneNames.MainMenu);
                 break;
@@ -191,6 +203,18 @@ public class UnityNetworkClient : MonoBehaviour
     } catch (Exception e) {
         Debug.LogError("Błąd parsowania komendy: " + e.Message);
     }
+}
+
+private void MoveEasel(Action<EaselPositionController> movement)
+{
+    EaselPositionController controller = FindFirstObjectByType<EaselPositionController>();
+    if (controller == null)
+    {
+        Debug.LogWarning("Nie znaleziono kontrolera pozycji sztalugi w aktywnej scenie.");
+        return;
+    }
+
+    movement(controller);
 }
 
 // ── Beacon Discovery ───────────────────────────────────────
@@ -346,4 +370,3 @@ IEnumerator CaptureAndSaveResult()
         public string ws_url;
     }
 }
-

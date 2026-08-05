@@ -443,6 +443,7 @@ GameObject:
   m_Component:
   - component: {fileID: 217487240}
   - component: {fileID: 217487239}
+  - component: {fileID: 217487241}
   m_Layer: 0
   m_Name: _SceneController
   m_TagString: Untagged
@@ -464,6 +465,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SceneStateSync
   sceneName: painting
   actions:
+  - action: move_easel_left
+    label: Sztaluga w lewo
+  - action: move_easel_right
+    label: Sztaluga w prawo
+  - action: move_easel_up
+    label: "Podnie\u015B sztalug\u0119"
+  - action: move_easel_down
+    label: "Obni\u017C sztalug\u0119"
   - action: clear_palette
     label: "Wyczy\u015B\u0107 palet\u0119"
   - action: save_painting
@@ -472,6 +481,22 @@ MonoBehaviour:
     label: "Nast\u0119pny wz\xF3r"
   - action: back_to_menu
     label: "Wyjd\u017A do menu"
+--- !u!114 &217487241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 217487238}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d11b8a6ac77b46ada33562c856bc77d4, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::EaselPositionController
+  easelRoot: {fileID: 2086312941}
+  movementStep: 0.05
+  horizontalLimit: 0.4
+  verticalLimit: 0.35
 --- !u!4 &217487240
 Transform:
   m_ObjectHideFlags: 0
@@ -2226,6 +2251,11 @@ BoxCollider:
 Transform:
   m_CorrespondingSourceObject: {fileID: 2371080988047123379, guid: 6ecff1383ec76e543965199259280ceb, type: 3}
   m_PrefabInstance: {fileID: 1459952163}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2086312941 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8f5fc76df85fc465a9d082359e442e08, type: 3}
+  m_PrefabInstance: {fileID: 1602264051}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &2086312939
 MonoBehaviour:
