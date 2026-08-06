@@ -20,6 +20,7 @@ public class ForestWalkSceneSetup : MonoBehaviour
         EnsureSpectatorCamera();
         EnsureForestWalkController();
         EnsureHeadBob();
+        EnsureFootsteps();
         EnsureBirdRandomizer();
     }
 
@@ -75,6 +76,15 @@ public class ForestWalkSceneSetup : MonoBehaviour
 
         // Self-resolves the XR camera offset and SplineAnimate at runtime.
         gameObject.AddComponent<ForestHeadBob>();
+    }
+
+    private void EnsureFootsteps()
+    {
+        if (FindFirstObjectByType<ForestFootsteps>() != null)
+            return;
+
+        // Self-resolves the spline motion reference and loads clips from Resources/Footsteps.
+        gameObject.AddComponent<ForestFootsteps>();
     }
 
     private void EnsureBirdRandomizer()
